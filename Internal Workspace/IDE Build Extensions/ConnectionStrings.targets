@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<UsingTask TaskName="ReplacePhrase"        AssemblyFile="$(SolutionDir)Internal Workspace\IDE Build Extensions\DLL\IDEBuildExtensions.dll" />
+	
+	<!--■ author: ahupa@polsl.pl, 2018 ■-->
+	
+	<PropertyGroup>
+		<ResolveReferencesDependsOn>
+			TransformConnectionStrings;
+			$(ResolveReferencesDependsOn)
+		</ResolveReferencesDependsOn>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<_DatabasePath>$(SolutionDir)Internal Workspace\Database\</_DatabasePath>
+		<_IntermediateAppConfigFile>$(IntermediateOutputPath)$(TargetFileName).config</_IntermediateAppConfigFile>
+		<_SQL_Express_2012>(LocalDB)\v11.0</_SQL_Express_2012>
+		<_SQL_Express_2016>(LocalDB)\MSSQLLocalDB</_SQL_Express_2016>
+		<_VisualStudioVersion>$(VisualStudioVersion)</_VisualStudioVersion>
+	</PropertyGroup>
+	
+	
+	<Target Name="TransformConnectionStrings" BeforeTargets="Build" Condition="!Exists('.\Properties\App.config.backup')" >
+		
+		<Copy SourceFiles="App.config"
+			  DestinationFiles=".\Properties\App.config.backup"
+			  OverwriteReadOnlyFiles="true"
+			  ContinueOnError="ErrorAndStop" >
+			<Output TaskParameter="CopiedFiles" ItemName="CopiedFilesToIntermediatePath" />
+		</Copy>
+		
+		<Message Text="ReplacePhrase" Importance="high" />
+		<Message Text="$(ProjectDir)App.config" Importance="high" />
+		<ReplacePhrase Condition="'$(_VisualStudioVersion)'=='12.0'"
+					   Prefix="var"
+					   Phrase="DataSource"
+					   ReplaceWith="$(_SQL_Express_2012)"
+					   SourceFile="$(ProjectDir)App.config"
+					   TargetFile="$(ProjectDir)App.config" >
+			<Output TaskParameter="ReplaceWith" ItemName="ReplacedWith" />
+		</ReplacePhrase>
+		<ReplacePhrase Condition="'$(_VisualStudioVersion)'>='14.0'"
+					   Prefix="var"
+					   Phrase="DataSource"
+					   ReplaceWith="$(_SQL_Express_2016)"
+					   SourceFile="$(ProjectDir)App.config"
+					   TargetFile="$(ProjectDir)App.config" >
+			<Output TaskParameter="ReplaceWith" ItemName="ReplacedWith" />
+		</ReplacePhrase>
+		<Message Text="  ├ Data Source   to: @(ReplacedWith)" Importance="high" />
+		
+		<ReplacePhrase Prefix="var"
+					   Phrase="DatabasePath"
+					   ReplaceWith="$(_DatabasePath)"
+					   SourceFile="$(ProjectDir)App.config"
+					   TargetFile="$(ProjectDir)App.config" >
+		</ReplacePhrase>
+		<Message Text="  └ Database path to: $(_DatabasePath)" Importance="high" />
+		
+	</Target>
+</Project>
