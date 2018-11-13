@@ -1,0 +1,33 @@
+﻿
+Build Task creation:
+
+
+1) Create a C# Class Library project: IDEBuildExtensions 
+
+2) Unload the project and then edit project file by adding the following node:
+
+<Reference Include="Microsoft.Web.Publishing.Tasks">
+  <HintPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll</HintPath>
+</Reference>
+
+Load the project. From now on this project will function well on all machines it is run on.
+
+3) Add to References: Microsoft.Build.Framework, Microsoft.Build.Utilities.v4.0
+
+Or use the following commands in the Package Manager Console to
+instal proper NuGet packages, in this case compatible with Visual Studio 2013.
+
+Install-Package Microsoft.Build.Framework -Version 14.3.0
+Install-Package Microsoft.Build.Utilities.Core -Version 14.3.0
+
+4) In a class file, add using's for:
+Microsoft.Build.Framework, Microsoft.Build.Utilities, and Microsoft.Web.Publishing.Tasks
+
+5) Create a public class extending the Microsoft.Build.Utilities.Task class
+or implementing the Microsoft.Build.Framework.ITask interface directly.
+
+6) Remove unnecessary, if created App.config, then build the library.
+
+7) If the compilation succeeded there should be three DLL files in the output directory:
+IDEBuildExtensions.dll, Microsoft.Web.Publishing.Tasks.dll, and Microsoft.Web.XmlTransform.dll
+

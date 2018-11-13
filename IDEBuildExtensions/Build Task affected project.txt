@@ -1,0 +1,49 @@
+﻿
+Utilizing Build Tasks:
+
+
+1) Successfully build the Build Task DLL
+
+2) Create a *.targets file and add a reference to Build Task DLL in a UsingTask node.
+Implement the custom build behaviour by writing a Target node, specify when it should be run.
+
+3) Place Build Task DLLs and Targets files in a common directory for the whole solution for convenience.
+
+e.g.: $(SolutionDir)Internal Workspace\IDE Build Extensions\
+      $(SolutionDir)Internal Workspace\IDE Build Extensions\DLL\
+
+
+4) Create a new project.
+
+5) Unload the project and then edit project file by adding the following node:
+
+<Import Project="$(SolutionDir)Internal Workspace\IDE Build Extensions\TargetsFileName.targets" />
+
+Load the project. Done.
+
+
+
+Note:
+
+Visual Studio editions prior to 2017 are not automatically copying
+configuration file form a class library project to a referencing it project.
+
+To achieve this functionality, one needs to unload the source project
+and then edit project file by adding the following node:
+
+<ItemGroup>
+	<Content Include="App.config">
+		<Link>$(TargetName).dll.config</Link>
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+</ItemGroup>
+
+or
+
+<ItemGroup>
+	<None Include="$(IntermediateOutputPath)$(TargetName)$(TargetExt).config" >
+		<Link>$(TargetName)$(TargetExt).config</Link>
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+</ItemGroup>
+
