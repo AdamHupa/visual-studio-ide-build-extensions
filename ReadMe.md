@@ -7,3 +7,6 @@ Build Task manuals
 2. affected project: /IDEBuildExtensions/Build Task affected project.txt
 
 Exemplary *.targets file: /Internal Workspace/IDE Build Extensions/ConnectionStrings.targets
+<br />
+<br />
+List of build-in build targets: https://gist.github.com/StevenLiekens/cae70cce25344ba47b86
