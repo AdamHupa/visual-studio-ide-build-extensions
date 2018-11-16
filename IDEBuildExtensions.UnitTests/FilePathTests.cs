@@ -54,7 +54,7 @@ namespace IDEBuildExtensions.UnitTests
                 new Tuple<bool, string>(false, @"C:\file "),
                 new Tuple<bool, string>(false, @"C:\file."),
 
-                //new Tuple<bool, string>(, @""),
+                //new Tuple<bool, string>(, @"")
             };
 
             foreach (var testEntry in testPathSet)
